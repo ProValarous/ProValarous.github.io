@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>document.documentElement.classList.add("js")</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muhammad Ahmed Atif</title>
+<meta name="description" content="Muhammad Ahmed Atif, researcher in multi-agent reinforcement learning, game theory and cooperative AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@600&family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark: #1e1e1e; --grey: #2d2d2d; --paper: #171718;
+    --ink: #ececec; --ink-muted: #a5a5aa; --on-dark: #f2f2f2; --on-dark-muted: #a5a5aa;
+    --rule-dark: #3a3a3c; --rule-light: #313134; --gold: #c9a646;
+    --green: #1de591; --green-ink: #1de591;
+    --pink: #ff5ea1; --yellow: #f5c84b; --purple: #ae62e8; --blue: #66d1ff;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "Work Sans", system-ui, sans-serif;
+    --arabic: "Reem Kufi", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; overflow-wrap: anywhere; background: var(--paper); color: var(--ink); font: 300 18px/1.65 var(--serif); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+  .label { font: 600 0.78rem/1.2 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 6px; }
+
+  /* ---------- dark header ---------- */
+  .hero { position: relative; background: radial-gradient(1400px 900px at 30% 35%, transparent 35%, rgba(20,20,20,.7) 100%), radial-gradient(1100px 650px at 15% 0%, rgba(48,48,50,.55), rgba(30,30,30,.25) 70%);
+          color: var(--on-dark); overflow: hidden; }
+  .clock { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+  .lattice { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .6; }
+  .hero-grid { position: relative; }
+  .hero a { color: var(--green); text-underline-offset: 3px; }
+  .hero .label { color: var(--green); }
+  .hero-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center;
+               min-height: 86vh; padding: 64px 16px; }
+  .tagline { font: 400 1.15rem/1.5 var(--sans); color: var(--green); letter-spacing: 0.02em; margin: 0; }
+  /* five threads converge into one line: different efforts, one direction */
+  .stripe { display: block; width: 180px; height: 30px; margin: 22px 0 0; overflow: visible; }
+  .stripe path { fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .play .stripe path { stroke-dashoffset: 1; animation: draw 1.4s ease-in-out forwards; }
+  .play .stripe path:nth-of-type(1) { animation-delay: 4.5s; } .play .stripe path:nth-of-type(2) { animation-delay: 4.6s; }
+  .play .stripe path:nth-of-type(3) { animation-delay: 4.7s; } .play .stripe path:nth-of-type(4) { animation-delay: 4.8s; }
+  .play .stripe path:nth-of-type(5) { animation-delay: 4.9s; } .play .stripe path:nth-of-type(6) { animation-delay: 5.6s; }
+
+  /* eight-pointed star rosette (khatam): each ring a different colour, one pattern */
+  .rosette { position: absolute; left: 0.2em; top: 50%; width: 3.3em; height: 3.3em; transform: translateY(-50%);
+             opacity: 0.2; pointer-events: none; overflow: visible; }
+  .rosette path { fill: none; stroke-width: 0.55; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .play .rosette { animation: settle 1.2s ease-out 3.3s both; }
+  .play .rosette path { stroke-dashoffset: 1; animation: draw 1.8s cubic-bezier(.5,0,.3,1) forwards; }
+  .play .rosette path:nth-child(1) { animation-delay: 0s; }   .play .rosette path:nth-child(2) { animation-delay: .25s; }
+  .play .rosette path:nth-child(3) { animation-delay: .5s; }  .play .rosette path:nth-child(4) { animation-delay: .75s; }
+  .play .rosette path:nth-child(5) { animation-delay: 1s; }   .play .rosette path:nth-child(6) { animation-delay: 1.25s; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes settle { from { opacity: 0.85; } to { opacity: 0.2; } }
+  .details { border-left: 1px solid var(--rule-dark); padding-left: 26px; }
+  .row { border-bottom: 1px solid var(--rule-dark); padding: 16px 0 16px 26px; }
+  .row:first-child { padding-top: 0; }
+  .row p { margin: 0; font-size: 1.1rem; }
+  .row .label { font-size: 0.7rem; margin-bottom: 4px; }
+  .big { font: 300 clamp(1.5rem, 2.6vw, 2rem)/1.3 var(--serif); margin: 0 0 22px; }
+  .asks { list-style: none; margin: 0; padding: 0; }
+  .asks li { border-top: 1px solid var(--rule-dark); padding: 12px 0; font-size: 1.08rem; }
+  .asks li::before { content: "?"; font: 600 0.95rem var(--sans); color: var(--green); margin-right: 12px; }
+  .asks li { color: var(--on-dark-muted); transition: color .6s; }
+  .asks li::before { display: inline-block; transition: transform .6s; }
+  .asks li.on { color: var(--on-dark); }
+  .asks li.on::before { transform: scale(1.35) rotate(-8deg); }
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease-out, transform .7s ease-out; }
+  .reveal.in { opacity: 1; transform: none; }
+  .closing { font: 400 0.95rem/1.6 var(--sans); color: var(--on-dark-muted); margin: 14px 0 0; }
+  .where { font: 400 0.95rem/1.6 var(--sans); color: var(--on-dark-muted); margin: 18px 0 0; }
+
+  /* ---------- the name: Arabic root letters become English consonants, then vowels complete it ---------- */
+  .name { position: relative; margin: 18px 0 22px; cursor: pointer; min-height: 2.1em;
+          font-size: clamp(3rem, 8vw, 5.4rem); }
+  .morph { display: block; position: relative; }
+  .name .en { display: block; position: relative; font: 300 1em/1.02 var(--serif); letter-spacing: -0.01em; white-space: nowrap; }
+  .en .c, .en .v { display: inline-block; vertical-align: top; }
+
+  /* three words stacked and overlapping, like a calligraphic composition */
+  /* one size, one baseline grid (pitch 0.8), no tilt, flush right; JS sets the width to the widest word */
+  .name .ar { position: absolute; left: 0; top: 50%; width: 3.6em; height: 2.6em; transform: translateY(-50%);
+              font: 600 0.9em/1 var(--arabic); pointer-events: none; }
+  .ar .w { position: absolute; display: block; white-space: nowrap; direction: rtl; mix-blend-mode: screen; }
+  .ar .w { right: 0; line-height: 1; }
+  .ar .w:nth-child(1) { top: 0;     color: var(--pink); }
+  .ar .w:nth-child(2) { top: 0.8em; color: var(--yellow); }
+  .ar .w:nth-child(3) { top: 1.6em; color: var(--green); }
+  .play .ar .w { animation: write 0.9s cubic-bezier(.6,.1,.3,1) both; }
+  .play .ar .w:nth-child(1) { animation-delay: 0.3s; }
+  .play .ar .w:nth-child(2) { animation-delay: 1.0s; }
+  .play .ar .w:nth-child(3) { animation-delay: 1.7s; }
+  /* simple crossfade: the Arabic fades out, the English fades in */
+  .play .ar { animation: away 0.8s ease-in 2.9s both; }
+  .play .en { animation: arrive 1s ease-out 3.5s both; }
+  @keyframes away { to { opacity: 0; } }
+  @keyframes arrive { from { opacity: 0; } to { opacity: 1; } }
+
+  .play .after { animation: rise 0.8s ease-out both; }
+  .play .after.d1 { animation-delay: 4.1s; } .play .after.d2 { animation-delay: 4.3s; }
+  .play .after.d3 { animation-delay: 4.5s; } .play .after.d4 { animation-delay: 4.7s; }
+  .play .after.d5 { animation-delay: 5.0s; }
+  /* Arabic is written right to left, so each word is revealed from its right edge */
+  @keyframes write { from { clip-path: inset(0 0 0 100%); opacity: .3; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .replay { font: 500 0.75rem var(--sans); color: var(--on-dark-muted); background: none; border: 0;
+            padding: 0; margin-top: 18px; cursor: pointer; letter-spacing: 0.04em; }
+  .replay:hover { color: var(--green); }
+
+  /* ---------- light reading pages ---------- */
+  .paper { background: radial-gradient(1400px 900px at 50% 0%, transparent 30%, rgba(10,10,10,.45) 100%); }
+  .paper a { color: var(--green-ink); text-underline-offset: 3px; }
+  section { padding: 64px 0; border-top: 1px solid var(--rule-light); }
+  section:first-child { border-top: 0; }
+  h2 { font: 600 0.92rem/1.2 var(--sans); letter-spacing: 0.08em; text-transform: uppercase;
+       margin: 0 0 32px; display: flex; align-items: center; gap: 12px; }
+  h2::before { content: ""; width: 15px; height: 15px; background: var(--accent, var(--green)); clip-path: polygon(50.0% 0.0%, 64.6% 14.6%, 85.4% 14.6%, 85.4% 35.4%, 100.0% 50.0%, 85.4% 64.6%, 85.4% 85.4%, 64.6% 85.4%, 50.0% 100.0%, 35.4% 85.4%, 14.6% 85.4%, 14.6% 64.6%, 0.0% 50.0%, 14.6% 35.4%, 14.6% 14.6%, 35.4% 14.6%); }
+
+  .quote { font: 300 clamp(1.5rem, 3.2vw, 2.1rem)/1.35 var(--serif); margin: 0 0 28px; max-width: 820px;
+           padding-left: 22px; border-left: 3px solid var(--green); }
+  .two { display: grid; grid-template-columns: 240px 1fr; gap: 48px; }
+  .side a { display: block; font: 500 0.95rem/2 var(--sans); text-decoration: none; }
+  .side a::after { content: " \2192"; }
+  .side a:hover { text-decoration: underline; }
+  .prose p { margin: 0 0 18px; font-size: 1.12rem; max-width: 680px; }
+
+  /* ---------- vision illustration ---------- */
+  .stage { background: var(--dark); border: 1px solid var(--rule-light); border-radius: 14px; overflow: hidden; color: var(--on-dark); }
+  .stage-top { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;
+               padding: 16px 18px 0; }
+  .modes { display: flex; gap: 8px; flex-wrap: wrap; }
+  .modes button { font: 500 0.82rem var(--sans); color: var(--on-dark-muted); background: transparent;
+                  border: 1px solid var(--rule-dark); border-radius: 20px; padding: 6px 14px; cursor: pointer; }
+  .modes button[aria-pressed="true"] { color: var(--dark); background: var(--green); border-color: var(--green); }
+  .stage .label { color: var(--green); margin: 0; }
+  #sim { display: block; width: 100%; height: 340px; }
+  .stage-caption { padding: 0 18px 18px; font-size: 1.05rem; min-height: 3.2em; transition: opacity .4s; }
+  .fine { font: 400 0.8rem/1.5 var(--sans); color: var(--ink-muted); margin: 12px 0 0; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 36px; }
+  .steps p { margin: 0; font-size: 1.02rem; }
+  .steps .label { color: var(--green-ink); }
+
+  .item { display: grid; grid-template-columns: 240px 1fr; gap: 48px; padding: 22px 0;
+          border-bottom: 1px solid var(--rule-light); }
+  .item:last-child { border-bottom: 0; }
+  .item .label { color: var(--green-ink); }
+  .item .when { font: 400 0.9rem/1.5 var(--sans); color: var(--ink-muted); margin: 0; }
+  .item .title { font-size: 1.22rem; margin: 0 0 6px; font-weight: 400; }
+  .item .authors { color: var(--ink-muted); font-size: 0.98rem; margin: 0 0 8px; }
+  .item .note { font-size: 1rem; margin: 0 0 10px; max-width: 680px; }
+  .arrows { margin: 0; }
+  .arrows a { font: 500 0.88rem/1 var(--sans); margin-right: 18px; text-decoration: none; white-space: nowrap; }
+  .arrows a::after { content: " \2192"; }
+  .arrows a:hover { text-decoration: underline; }
+  strong { font-weight: 400; color: #fff; }
+
+  .item ul { margin: 0 0 10px; padding-left: 1.1em; max-width: 680px; }
+  .item li { font-size: 1rem; margin-bottom: 6px; }
+  .group { font: 600 0.78rem/1.2 var(--sans); letter-spacing: 0.08em; text-transform: uppercase;
+           color: var(--ink-muted); margin: 28px 0 4px; }
+  .group:first-of-type { margin-top: 0; }
+  .interests { font: 500 0.95rem/1.6 var(--sans); color: var(--ink-muted); margin: -12px 0 28px; }
+  .hero-links { margin: 12px 0 0; font: 500 0.9rem/1.8 var(--sans); }
+  .hero-links a { margin-right: 16px; text-decoration: none; white-space: nowrap; }
+  .hero-links a:hover { text-decoration: underline; }
+  /* ---------- the baab (door): a plain arch, turned 45 degrees to face its entry ---------- */
+  .item { position: relative; }
+  .paper { overflow-x: clip; }
+  .item .desc, .item .det { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .8s ease, opacity .6s ease; }
+  .item .desc .label { color: var(--gold); margin-top: 6px; }
+  .lit .desc, .lit .det { max-height: 80em; opacity: 1; }
+  /* every door row has one height (the tallest entry); the door fills it from the top line to the bottom line */
+  .baab { position: absolute; left: calc(100% + (100vw - 100%) / 2 - 15px - var(--doorw, 64px) * .6); top: 0;
+          width: var(--doorw, 64px); height: var(--rowh, 88px);
+          z-index: 3; outline: none; transform-origin: left center; transform: perspective(420px) rotateY(-45deg); transition: filter .5s ease; }
+  .baab svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .baab .frame { fill: var(--gold); }
+  .baab .light { fill: url(#doorlight); opacity: .06; transition: opacity .5s ease; }
+  .lit .baab { filter: drop-shadow(0 0 14px rgba(255,200,90,.55)); }
+  .lit .baab .light { opacity: 1; }
+  .baab:focus-visible { outline: 2px solid var(--gold); outline-offset: 6px; }
+
+  /* volumetric light from the doorway across the entry, with drifting dust */
+  .beam { position: absolute; top: 0; bottom: 0; left: -40px;
+          width: calc(100% + 40px + (100vw - 100%) / 2 - 15px - var(--doorw, 64px) * .45);
+          pointer-events: none; opacity: 0; z-index: 0;
+          clip-path: polygon(100% calc(var(--rowh, 88px) * .14), 100% var(--rowh, 88px), 0 100%, 0 0);
+          background:
+            repeating-linear-gradient(100deg, rgba(255,214,120,0) 0 34px, rgba(255,214,120,.10) 34px 52px),
+            linear-gradient(to left, rgba(255,200,90,.38), rgba(255,214,120,.12) 45%, rgba(255,214,120,0) 85%);
+          background-size: 400px 100%, 100% 100%; transition: opacity .6s ease; }
+  .dust { position: absolute; top: 0; z-index: 4; pointer-events: none; }
+  .lit .beam { opacity: 1; animation: rays 6s linear infinite; }
+  @keyframes rays { to { background-position: -400px 0, 0 0; } }
+  .item > div { position: relative; z-index: 1; }
+  .item.has-door { border-bottom-color: transparent; }
+  .item.has-door::before, .item.has-door::after { content: ""; position: absolute; left: 0; height: 1px;
+    width: calc(100% + (100vw - 100%) / 2); background: var(--rule-light); z-index: 1; }
+  .item.has-door::before { top: 0; }
+  .item.has-door::after { bottom: -1px; }
+  .item.has-door + .item.has-door::before { display: none; }   /* one line between neighbours, not two */
+
+  /* the entry reacts: the headline glows */
+  .item .title, .item .label, .item .when, .item .authors { transition: color .6s, text-shadow .6s; }
+  .lit .title { color: #fff3cf; animation: glow 2.4s ease-in-out infinite; }
+  @keyframes glow { 0%, 100% { text-shadow: 0 0 10px rgba(255,210,110,.75), 0 0 30px rgba(255,180,60,.4); }
+                    50% { text-shadow: 0 0 16px rgba(255,220,130,.95), 0 0 46px rgba(255,180,60,.6); } }
+  .lit .label { color: #ffd36b; }
+  .lit .when, .lit .authors { color: #ecd08a; }
+
+  /* when the margin is too narrow for the door, make room inside the entry */
+  @media (max-width: 1300px) {
+    .item.has-door { padding-right: calc(var(--doorw, 64px) * .5); }
+  }
+  @media (max-width: 760px) {
+    .item.has-door { padding-right: 52px; }
+    .baab { left: calc(100% - 44px); width: 40px; height: 55px; top: 18px; }
+    .beam { width: calc(100% + 40px - 36px); clip-path: polygon(100% 24px, 100% 72px, 0 100%, 0 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .beam, .item .desc, .item .det, .baab .light { transition: none; } .lit .beam, .lit .title { animation: none; }
+  }
+  footer { background: rgba(18,18,19,.6); color: var(--on-dark-muted); font: 400 0.85rem/1.6 var(--sans); padding: 0 0 36px; }
+  .weave { display: block; width: 100%; height: 46px; }
+  .weave path { fill: none; stroke-width: 2.2; stroke-linecap: round; }
+  footer .about-design { max-width: 720px; margin: 22px 0 26px; }
+  footer .about-design .label { color: var(--gold); }
+  footer .about-design p:not(.label) { font: 300 1rem/1.75 var(--serif); color: var(--on-dark-muted); margin: 0 0 14px; }
+  footer .motto { font: 300 1.25rem/1.4 var(--serif); color: var(--on-dark); margin: 18px 0 6px; }
+
+  @media (max-width: 760px) {
+    .hero-grid { grid-template-columns: minmax(0,1fr); min-height: auto; gap: 36px; padding: 48px 16px; }
+    .details { border-left: 0; padding-left: 0; }
+    .row { padding-left: 0; } .row:first-child { padding-top: 16px; }
+    .two, .item, .steps { grid-template-columns: minmax(0,1fr); gap: 10px; }
+    .steps { gap: 20px; }
+    #sim { height: 280px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .play .after, .play .ar .w, .play .ar, .play .en { animation: none !important; }
+    .ar { opacity: 0; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .play .rosette, .play .rosette path, .play .stripe path { animation: none !important; stroke-dashoffset: 0; }
+    .asks li { color: var(--on-dark); }
+  }
+</style>
+</head>
+<body>
+<canvas class="clock" aria-hidden="true"></canvas>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="doorlight" cx="50%" cy="60%" r="65%"><stop offset="0" stop-color="#fff4cc"/><stop offset=".55" stop-color="#ffd36b"/><stop offset="1" stop-color="#f5a623"/></radialGradient></defs></svg>
+<header class="hero">
+  <canvas class="lattice" aria-hidden="true"></canvas>
+  <div class="wrap hero-grid play" id="hero">
+    <div>
+      <p class="label after d1">Researcher</p>
+      <h1 class="name" title="Click to replay" aria-label="Muhammad Ahmed Atif">
+        <svg class="rosette" viewBox="0 0 100 100" aria-hidden="true"><path d="M50.00,4.00 L96.00,50.00 L50.00,96.00 L4.00,50.00 Z" pathLength="1" style="stroke:var(--pink)"/><path d="M82.53,17.47 L82.53,82.53 L17.47,82.53 L17.47,17.47 Z" pathLength="1" style="stroke:var(--blue)"/><path d="M50.00,22.00 L78.00,50.00 L50.00,78.00 L22.00,50.00 Z" pathLength="1" style="stroke:var(--yellow)"/><path d="M69.80,30.20 L69.80,69.80 L30.20,69.80 L30.20,30.20 Z" pathLength="1" style="stroke:var(--purple)"/><path d="M82.52,63.47 L63.47,82.52 L36.53,82.52 L17.48,63.47 L17.48,36.53 L36.53,17.48 L63.47,17.48 L82.52,36.53 Z" pathLength="1" style="stroke:var(--green)"/><path d="M50.00,34.00 L54.69,38.69 L61.31,38.69 L61.31,45.31 L66.00,50.00 L61.31,54.69 L61.31,61.31 L54.69,61.31 L50.00,66.00 L45.31,61.31 L38.69,61.31 L38.69,54.69 L34.00,50.00 L38.69,45.31 L38.69,38.69 L45.31,38.69 Z" pathLength="1" style="stroke:var(--green)"/></svg>
+        <span class="morph" aria-hidden="true"><span class="ar" lang="ar"><span class="w" data-keys="a1,a2,a3,a4"><span class="txt">محمد</span></span><span class="w" data-keys="b1,b2,b3,b4"><span class="txt">أحمد</span></span><span class="w" data-keys="c1,c1,c2,c3"><span class="txt">عاطف</span></span></span><span class="en">Muhammad<br>Ahmed Atif</span></span></span>
+      </h1>
+      <p class="tagline after d2">Multi-agent reinforcement learning,<br>game theory &amp; cooperative AI</p>
+      <p class="where after d3">Habib University, Karachi</p>
+      <p class="hero-links after d3"><a href="mailto:m.ahmedatif720@gmail.com">Email</a><a href="AhmedAtif_CV.pdf">CV</a><a href="https://scholar.google.com/citations?user=4vq8XOoAAAAJ">Google Scholar</a><a href="https://github.com/ProValarous">GitHub</a><a href="https://www.linkedin.com/in/ahmedatif256/">LinkedIn</a></p>
+      <svg class="stripe" viewBox="0 0 180 30" aria-hidden="true"><defs><linearGradient id="t-pink" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="110" y2="0"><stop offset=".35" stop-color="#ff5ea1"/><stop offset="1" stop-color="#f2f2f2"/></linearGradient><linearGradient id="t-yellow" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="110" y2="0"><stop offset=".35" stop-color="#f5c84b"/><stop offset="1" stop-color="#f2f2f2"/></linearGradient><linearGradient id="t-green" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="110" y2="0"><stop offset=".35" stop-color="#1de591"/><stop offset="1" stop-color="#f2f2f2"/></linearGradient><linearGradient id="t-blue" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="110" y2="0"><stop offset=".35" stop-color="#66d1ff"/><stop offset="1" stop-color="#f2f2f2"/></linearGradient><linearGradient id="t-purple" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="110" y2="0"><stop offset=".35" stop-color="#ae62e8"/><stop offset="1" stop-color="#f2f2f2"/></linearGradient></defs><path pathLength="1" style="stroke:url(#t-pink)" d="M0 3 C45 3, 70 15, 110 15"/><path pathLength="1" style="stroke:url(#t-yellow)" d="M0 9 C45 9, 70 15, 110 15"/><path pathLength="1" style="stroke:url(#t-green)" d="M0 15 C45 15, 70 15, 110 15"/><path pathLength="1" style="stroke:url(#t-blue)" d="M0 21 C45 21, 70 15, 110 15"/><path pathLength="1" style="stroke:url(#t-purple)" d="M0 27 C45 27, 70 15, 110 15"/><path pathLength="1" style="stroke:#f2f2f2;stroke-width:2.2" d="M110 15 L180 15"/></svg>
+      <button class="replay after d4" type="button">↻ Replay</button>
+    </div>
+    <div class="details">
+      <p class="label after d1">Vision</p>
+      <p class="big after d1">Many of our hardest problems are problems of working together.</p>
+      <ul class="asks">
+        <li class="after d2">What makes agents of unequal ability cooperate, and keep cooperating?</li>
+        <li class="after d3">When a team shares one objective, whose welfare does it count?</li>
+        <li class="after d4">Which human ways of sharing carry over to learning agents?</li>
+      </ul>
+      <p class="closing after d5">I study these questions with multi-agent reinforcement learning and game theory, so that machines can learn from cooperation rather than around it.</p>
+    </div>
+  </div>
+</header>
+
+<main class="paper">
+<div class="wrap">
+
+<section id="vision" style="--accent: var(--green)">
+  <h2>Research interests</h2>
+  <p class="quote">When and why do learning agents with differing capabilities cooperate in social dilemmas, and which welfare objectives keep that cooperation durable for the group and fair to each agent?</p>
+  <p class="interests">Multi-agent reinforcement learning · Cooperative AI · Game theory · Collective intelligence</p>
+
+  <div class="stage">
+    <div class="stage-top">
+      <p class="label" id="mode-label">Objective</p>
+      <div class="modes" role="group" aria-label="Choose the team's objective">
+        <button type="button" data-mode="total" aria-pressed="true">Maximise the total</button>
+        <button type="button" data-mode="fair" aria-pressed="false">A fair share for each</button>
+      </div>
+    </div>
+    <canvas id="sim" aria-label="Illustration: four agents of different speeds chase a target. Under a total-reward objective the slowest agent is sidelined; under a fair objective every agent holds a position around the target."></canvas>
+    <p class="stage-caption" id="caption"></p>
+  </div>
+  <p class="fine">An illustration of the question, scripted by hand. It is not a result from my experiments.</p>
+
+  <div class="steps">
+    <div><p class="label">Agents differ</p>
+      <p>Real teams mix fast and slow, strong and weak agents. My testbed, PPAGE, lets agents differ in speed and stamina.</p></div>
+    <div><p class="label">Objectives decide</p>
+      <p>A team objective can raise the total while one agent's competence is suppressed. That cooperation may not last.</p></div>
+    <div><p class="label">What I will test</p>
+      <p>Which welfare objectives keep every agent in the game, and under what conditions cooperation stays stable.</p></div>
+  </div>
+</section>
+
+<section id="education" style="--accent: var(--yellow)">
+  <h2>Education</h2>
+  <div class="item">
+    <div><p class="label">Habib University, Karachi</p><p class="when">2020 to 2024</p></div>
+    <div><p class="title">B.S. Computer Science</p>
+      <p class="note">CGPA 3.32/4.00, 131 credits. Merit scholarship covering 70% of tuition, awarded on entry and held from 2020 to 2024.</p><p class="note">Senior capstone (two semesters, supervised): <em>"Design and Development of an Autonomous Indoor Food Delivery Robot,"</em> May 2024. A four-person ROS 2 build; I owned navigation and motion planning, released separately as the study published at ICRAI 2024.</p><p class="arrows"><a href="https://github.com/ProValarous/ROS2-Comparative-Planner-Analysis">Navigation and planner code</a><a href="https://github.com/SYED-M-HUSSAIN/Robotics_Capstone">Team thesis and project archive</a></p>
+    </div>
+  </div>
+</section>
+
+<section id="publications" style="--accent: var(--pink)">
+  <h2>Publications</h2>
+  <p class="group">Peer-reviewed, published</p>
+  <div class="item">
+    <div><p class="label">Published</p><p class="when">IEEE FIE 2025</p></div>
+    <div><p class="title">Bridging the Gap Between Theoretical and Practical Reinforcement Learning in Undergraduate Education</p>
+      <p class="authors"><strong>M. A. Atif</strong> and M. S. Shaikh. 2025 IEEE Frontiers in Education Conference (FIE), pp. 1 to 9.</p><div class="desc"><p class="label">Abstract</p><p class="note">This innovative practice category paper presents an innovative framework for teaching Reinforcement Learning (RL) at the undergraduate level. Recognizing the challenges posed by the complex theoretical foundations of the subject and the need for hands-on algorithmic practice, the proposed approach integrates traditional lectures with interactive lab-based learning. Drawing inspiration from effective pedagogical practices in computer science and engineering, the framework engages students through real-time coding exercises using simulated environments such as OpenAI Gymnasium. The effectiveness of this approach is evaluated through student surveys, instructor feedback, and course performance metrics, demonstrating improvements in understanding, debugging, parameter tuning, and model evaluation. Ultimately, the study provides valuable insight into making Reinforcement Learning more accessible and engaging, thereby equipping students with essential problem-solving skills for real-world applications in Artificial Intelligence.</p></div><p class="note">An integrated lecture-and-lab framework on Gymnasium environments, evaluated against student surveys, instructor feedback and course performance. Gains concentrate in debugging, parameter tuning and model evaluation, where theory-first teaching leaves students weakest.</p><p class="arrows"><a href="https://doi.org/10.1109/FIE63693.2025.11328225">DOI</a><a href="https://arxiv.org/abs/2509.05689">arXiv</a></p>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">Published</p><p class="when">IEEE ICRAI 2024</p></div>
+    <div><p class="title">Navigating the Maze Environment in ROS-2: An Experimental Comparison of Global and Local Planners for Dynamic Trajectory Planning in Mobile Robots</p>
+      <p class="authors">S. M. Hussain, <strong>M. A. Atif</strong>, S. M. Daniyal, L. Ahmed, B. Memon and Q. Pasta. 2024 IEEE International Conference on Robotics and Automation in Industry (ICRAI), pp. 1 to 7.</p><div class="desc"><p class="label">Abstract</p><p class="note">A critical task in the quickly developing field of robotics is efficient path planning in dynamic environments. Within the framework of ROS2 (Robot Operating System 2), this paper gives a thorough comparative analysis of several autonomous mobile robot path planning algorithms, including A*, Dijkstra, Regulated Pure Pursuit (RPP), and Dynamic Window Approach (DWA). This research investigated the effectiveness of merging local and global path planners in a dynamic maze environment using an experimental platform built on top of ROS2. Metrics include path length, deviation from the planned trajectory, and execution time. Obtained results demonstrate the performance of these algorithms highlighting their strengths and limitations while focusing on how some combinations perform better than others in terms of accuracy, planning time, and reliability.</p></div><p class="note">A*, Dijkstra, Regulated Pure Pursuit and the Dynamic Window Approach paired as global and local planners in a dynamic maze. Which pairing wins depends on the metric, so the two choices cannot be made independently. <em>My contribution:</em> designed and ran the comparison and its ROS 2 harness; lead author of the public code, rosbag recordings and plots.</p><p class="arrows"><a href="https://doi.org/10.1109/ICRAI62391.2024.10894622">DOI</a><a href="https://github.com/ProValarous/ROS2-Comparative-Planner-Analysis">Code</a></p>
+    </div>
+  </div>
+  <p class="group">Under review</p>
+  <div class="item">
+    <div><p class="label">Under review</p><p class="when">EAAI-27, with AAAI-27</p></div>
+    <div><p class="title">PPAGE: A Predator-Prey Gridworld as an Undergraduate On-Ramp to Multi-Agent Reinforcement Learning</p>
+      <p class="authors"><strong>M. A. Atif</strong> et al. Submitted to the Seventeenth Symposium on Educational Advances in Artificial Intelligence (EAAI-27).</p><p class="note">Multi-agent reinforcement learning is taught almost only at graduate level because its tools assume a preparation floor they never state. An enforced extension contract lowers it: across a year, five undergraduate contributors extended the testbed without any of them modifying its protected core.</p>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">Under review</p><p class="when">AAMAS 2027</p></div>
+    <div><p class="title">Does Centralized Learning Help Embodied Agents Coordinate, and When Can a Tabular Study Tell?</p>
+      <p class="authors"><strong>M. A. Atif</strong>, N. N. Haji, M. E. Atif and M. S. Shaikh.</p><div class="desc"><p class="label">Abstract</p><p class="note">Tabular studies are a common way to compare independent and centralized multi-agent learners, because they avoid function approximation. A natural expectation is that centralized learning, which learns joint actions, helps agents coordinate, especially when their bodies make solo success hard. Earlier work tests this only in parts: it measures coordination for one learning method, compares methods with the agents' bodies fixed, or varies speed but reports only how well the team did. We test it in a predator-prey environment, where teammates cooperatively hunt together while two teams compete. We compare independent Q-learning (IQL) with central Q-learning (CQL) in all four predator and prey pairings, under limits on speed and stamina, on a 5x5 and an 8x8 grid trained for 200,000 episodes each, and check that the agents learn on both. We measure coordination directly, with predictions for the main measurement fixed in advance. In this task, where one predator can capture prey alone, we find three things. First, CQL costs its agents in both roles on both grids, and its predators coordinate no more than IQL's. Second, its one benefit comes from acting on the best joint action: this cut capture time by 42% on the small grid with faster prey and unlimited stamina, but helped nowhere on the larger grid, where the best joint action had mostly never been tried. Third, on the larger grid a tie-breaking default decided which method won, even though the agents had passed a learning check. A tabular comparison can therefore be trusted only if it also checks how much of the state space the agents covered and implements the methods alike. We propose simple checks for both.</p></div><p class="note">With coordination measured directly, centralized Q-learning cost its agents in both roles on both grids, and its predators coordinated no more than independent learners. A tabular comparison can be trusted only if it also checks state-space coverage and implements the methods alike.</p><p class="arrows"><a href="https://arxiv.org/abs/2601.17454">arXiv</a></p>
+    </div>
+  </div>
+  <p class="group">Work in progress</p>
+  <div class="item">
+    <div><p class="label">In progress</p><p class="when">Preprint</p></div>
+    <div><p class="title">A Controlled Study of Double DQN and Dueling DQN Under Cross-Environment Transfer</p>
+      <p class="authors">A. Nasir, F. Dossa, <strong>M. A. Atif</strong> and M. S. Shaikh. Reviewed at IJCNN 2026; revised version in preparation for Transactions on Machine Learning Research (TMLR).</p><div class="desc"><p class="label">Abstract</p><p class="note">Transfer learning in deep reinforcement learning is often motivated by improved stability and reduced training cost, but it can also fail under substantial domain shift. This paper presents a controlled empirical study examining how architectural differences between Double Deep Q-Networks (DDQN) and Dueling DQN influence transfer behavior across environments. Using CartPole as a source task and LunarLander as a structurally distinct target task, we evaluate a fixed layer-wise representation transfer protocol under identical hyperparameters and training conditions, with baseline agents trained from scratch used to contextualize transfer effects. Empirical results show that DDQN consistently avoids negative transfer under the examined setup and maintains learning dynamics comparable to baseline performance in the target environment. In contrast, Dueling DQN consistently exhibits negative transfer under identical conditions, characterized by degraded rewards and unstable optimization behavior. Statistical analysis across multiple random seeds confirms a significant performance gap under transfer. These findings suggest that architectural inductive bias is strongly associated with robustness to cross-environment transfer in value-based deep reinforcement learning under the examined transfer protocol.</p></div><p class="note">CartPole to LunarLander under one fixed transfer protocol. DDQN avoids negative transfer; Dueling DQN shows it consistently. <em>My contribution:</em> supervised the study end to end and edited the manuscript. The two lead authors are undergraduates I trained.</p><p class="arrows"><a href="https://arxiv.org/abs/2602.09810">arXiv</a></p>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">In progress</p><p class="when">Journal of Open Source Software</p></div>
+    <div><p class="title">Software paper describing PPAGE</p>
+      <p class="note">In preparation.</p>
+    </div>
+  </div>
+</section>
+
+<section id="funding" style="--accent: var(--blue)">
+  <h2>Research funding</h2>
+  <p class="interests" style="margin:0 0 8px">Author of both proposals; each won competitive internal funding. Under Habib University rules a student cannot hold an internal grant, so Dr. M. S. Shaikh is principal investigator of record.</p>
+  <div class="item">
+    <div><p class="label">Habib University</p><p class="when">2026</p></div>
+    <div><p class="title">An Open-Source Multi-Agent Reinforcement Learning Testbed for Undergraduate Research</p><div class="desc"><p class="label">From the proposal</p><p class="note">Building on this foundation, the proposed ten-week effort focuses on stabilizing and releasing the platform as an open-source research and teaching tool (v0.1), while expanding it with modular implementations of widely used RL and MARL algorithms. Positioned as applied research combined with infrastructure development, the project examines whether a discrete, reproducible MARL testbed can improve accessibility, reproducibility, and analysis for early-stage researchers.</p></div>
+      <p class="note">Summer Tehqiq Research Program. Ten-week funded programme, competitive review.</p>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">Habib University</p><p class="when">2025</p></div>
+    <div><p class="title">Multi-Agent Reinforcement Learning: A New AI Frontier</p>
+      <p class="note">Habib University Internal Research Grant. Funded the university's first multi-agent learning project.</p>
+    </div>
+  </div>
+</section>
+
+<section id="software" style="--accent: var(--purple)">
+  <h2>Research software and other selected projects</h2>
+  <div class="item">
+    <div><p class="label">Released</p><p class="when">v0.9.2 · August 2026</p></div>
+    <div><p class="title">PPAGE: Predator-Prey Archetypal Gridworld Environment</p>
+      <p class="note">Open-source testbed for controlled study of coordination, equilibrium selection and generalisation in multi-agent reinforcement learning, and the testbed the AAMAS study runs on.</p><ul><li>A protected physics core behind typed plugins: rewards, observations and actions are swappable registries, so changing the objective under study is a configuration change and not a rewrite.</li><li>Eight example learning baselines behind a single two-method interface, from tabular Q-learning to asynchronous actor-critic, including a game-theoretic learner.</li><li>Reproducible by construction: one fixed seed reproduces world construction and rollouts bit for bit.</li><li>Apache 2.0, Python 3.10 to 3.12, six named software authors, documented install, quickstart and API reference.</li></ul><p class="arrows"><a href="https://github.com/UHUMALAB/PPAGE">GitHub</a><a href="https://uhumalab.github.io/PPAGE/">Docs</a><a href="https://doi.org/10.5281/zenodo.21833286">Zenodo</a></p>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">Project</p><p class="when">2022 to 2023</p></div>
+    <div><p class="title">Lip2Urdu: Urdu speech synthesis from lip reading, for ataxia</p>
+      <p class="note">Lip-to-speech system for people whose loss of motor coordination affects speech and hand control alike, so they can neither speak intelligibly nor sign, and for whom no Urdu tool existed. PyTorch pipeline covering a CNN facial encoder, audio preprocessing and synthesis, following the Lip2Wav and Tacotron2 line of work. Led a three-person team. Second place at DURS 2024.</p><p class="arrows"><a href="https://github.com/ProValarous/Lip2Urdu">GitHub</a></p>
+    </div>
+  </div>
+</section>
+
+<section id="research" style="--accent: var(--green)">
+  <h2>Research experience</h2>
+  <div class="item">
+    <div><p class="label">Habib University</p><p class="when">Jun to Aug 2026</p></div>
+    <div><p class="title">Research Supervisor, Summer Tehqiq Research Program</p>
+      <p class="note">Under Dr. M. Shahid Shaikh. Funded ten-week programme to harden the testbed into a releasable research and teaching tool and widen its algorithm library.</p><ul><li>Supervised a team of three undergraduate researchers, each owning a component, and ran the v0.9.2 release.</li><li>Architected the layered plugin design separating environment, observation, reward and action, so that five undergraduate contributors extended the testbed across a year without modifying its core.</li><li>Implemented joint-action learning with game theory using Correlated-Q, verified against the reference textbook's worked examples, then traced its failure to learn to a degenerate game in the experimental setup and not to the algorithm.</li></ul>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">Habib University</p><p class="when">Jul 2025 to Mar 2026</p></div>
+    <div><p class="title">Lead Researcher, Multi-Agent Reinforcement Learning and Emergent Social Behaviour</p>
+      <p class="note">Under Dr. M. Shahid Shaikh. No multi-agent learning group existed at the institution; the project established one.</p><ul><li>Designed the study isolating coordination structure from function approximation, and ran the full grid: 4 pairings × 3 regimes × 10 seeds, 40,000 episodes each.</li><li>Designed a two-phase best-response evaluation against frozen predators, showing the trained policies remained exploitable.</li><li>Traced an apparent advantage for independent learners on the 8×8 grid to how the two methods break ties, and proposed checks for when a tabular comparison can be trusted.</li><li>Built and released PPAGE; trained and supervised the undergraduate research team.</li></ul>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">Habib University</p><p class="when">Sep 2024 to Jun 2025</p></div>
+    <div><p class="title">University Research Assistant, Reinforcement Learning</p>
+      <p class="note">Research-weighted appointment on the gap between how reinforcement learning is taught and what students can do with it. Designed and evaluated the lecture-and-lab framework and measured its effect on practical competency, published at FIE 2025.</p>
+    </div>
+  </div>
+</section>
+
+<section id="teaching" style="--accent: var(--yellow)">
+  <h2>Teaching and mentoring</h2>
+  <div class="item">
+    <div><p class="label">Habib University</p><p class="when">Spring 2025</p></div>
+    <div><p class="title">Co-taught Introduction to Reinforcement Learning (300 level)</p>
+      <p class="note">The 26-student offering evaluated in the FIE 2025 paper, run on the lecture-and-lab framework I designed.</p>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">Habib University</p><p class="when">2022 to 2023</p></div>
+    <div><p class="title">Teaching Assistant</p>
+      <p class="note">Probability &amp; Statistics; Programming Fundamentals.</p>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">Habib University</p><p class="when">2022 to 2023</p></div>
+    <div><p class="title">President, Habib University Artificial Intelligence and Robotics Club</p>
+      
+    </div>
+  </div>
+</section>
+
+<section id="industry" style="--accent: var(--pink)">
+  <h2>Industry experience</h2>
+  <div class="item">
+    <div><p class="label">SiliconZero, Inc.</p><p class="when">Apr 2026 to present · remote</p></div>
+    <div><p class="title">Research Engineer</p>
+      <p class="note">Founding team. End-to-end automation of analog IC design under hard physical and electrical correctness constraints.</p><ul><li>Built the design pipeline: a circuit written in Python becomes, in one command and nine stages, a SkyWater sky130 layout that passes DRC and LVS, with post-layout extraction.</li><li>Designed the product's schematic abstraction (primitives, motifs, complete circuits).</li><li>Led the development of the product's user interface: schematic and layout views, analysis plots, a schematic editor and an artifact explorer, over a FastAPI rendering service.</li><li>The pipeline is the execution layer for the product's planned agentic design loop.</li></ul>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">Folio3 Software, Karachi</p><p class="when">Jun to Jul 2022</p></div>
+    <div><p class="title">Artificial Intelligence Intern</p>
+      <p class="note">Built and evaluated vision models for clothing-care symbol recognition, including data curation and augmentation.</p>
+    </div>
+  </div>
+</section>
+
+<section id="honours" style="--accent: var(--blue)">
+  <h2>Honours and awards</h2>
+  <div class="item">
+    <div><p class="label">Texas A&amp;M University</p><p class="when">2023</p></div>
+    <div><p class="title">Second position, Invent For The Planet Global Finals</p>
+      <p class="note">After placing first in the regional round. A 48-hour design competition run at 24 universities worldwide, each host's winner advancing to College Station.</p>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">Habib University</p><p class="when">2024</p></div>
+    <div><p class="title">Second place, Dhanani School Undergraduate Research Symposium (DURS)</p>
+      <p class="note">For Lip2Urdu. DURS is the school's annual juried symposium.</p>
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">ICPC</p><p class="when">2023</p></div>
+    <div><p class="title">Regional Qualifiers, International Collegiate Programming Contest</p>
+      
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">Habib University</p><p class="when">2019 · pre-university</p></div>
+    <div><p class="title">Winner, Omicron II</p>
+      
+    </div>
+  </div>
+  <div class="item">
+    <div><p class="label">KIET, Karachi</p><p class="when">2017 · pre-university</p></div>
+    <div><p class="title">Winner, Junior Junkies Module, Student Engineering Exhibition</p>
+      
+    </div>
+  </div>
+</section>
+
+<section id="skills" style="--accent: var(--purple)">
+  <h2>Skills and languages</h2>
+  <div class="item">
+    <div><p class="label">Skills</p><p class="when"></p></div>
+    <div>
+      <p class="note"><strong>Programming:</strong> Python, C++, C, TypeScript, FastAPI, ROS 2, Git, LaTeX.<br><strong>ML and RL:</strong> PyTorch, TensorFlow 2, Gymnasium, RLlib, Tianshou.<br><strong>IC design tools:</strong> KLayout, Magic, netgen, ngspice, xschem; SkyWater sky130.<br><strong>Languages:</strong> English (IELTS Academic 7.5, CEFR C1); Urdu (native); Arabic (classical; grammar and morphology); Punjabi (conversational); German (beginner).</p>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer>
+  <svg class="weave" viewBox="0 0 1200 46" preserveAspectRatio="none" aria-hidden="true"><path style="stroke:var(--pink)" d="M0,23.0 L20,26.1 L40,29.1 L60,31.9 L80,34.2 L100,36.0 L120,37.3 L140,37.9 L160,37.9 L180,37.2 L200,35.9 L220,34.0 L240,31.7 L260,28.9 L280,25.9 L300,22.8 L320,19.6 L340,16.6 L360,13.9 L380,11.6 L400,9.8 L420,8.6 L440,8.0 L460,8.1 L480,8.9 L500,10.2 L520,12.1 L540,14.5 L560,17.3 L580,20.3 L600,23.5 L620,26.6 L640,29.6 L660,32.2 L680,34.5 L700,36.3 L720,37.4 L740,38.0 L760,37.8 L780,37.1 L800,35.7 L820,33.7 L840,31.3 L860,28.5 L880,25.4 L900,22.3 L920,19.2 L940,16.2 L960,13.6 L980,11.3 L1000,9.6 L1020,8.5 L1040,8.0 L1060,8.2 L1080,9.0 L1100,10.5 L1120,12.5 L1140,15.0 L1160,17.8 L1180,20.8 L1200,24.0"/><path style="stroke:var(--yellow)" d="M0,37.3 L20,37.9 L40,37.9 L60,37.3 L80,36.0 L100,34.1 L120,31.7 L140,29.0 L160,26.0 L180,22.9 L200,19.7 L220,16.7 L240,14.0 L260,11.7 L280,9.9 L300,8.7 L320,8.1 L340,8.1 L360,8.8 L380,10.2 L400,12.1 L420,14.5 L440,17.2 L460,20.2 L480,23.4 L500,26.5 L520,29.5 L540,32.2 L560,34.4 L580,36.2 L600,37.4 L620,38.0 L640,37.9 L660,37.1 L680,35.7 L700,33.8 L720,31.3 L740,28.5 L760,25.5 L780,22.4 L800,19.2 L820,16.3 L840,13.6 L860,11.4 L880,9.7 L900,8.5 L920,8.0 L940,8.2 L960,9.0 L980,10.4 L1000,12.4 L1020,14.9 L1040,17.7 L1060,20.7 L1080,23.9 L1100,27.0 L1120,29.9 L1140,32.6 L1160,34.8 L1180,36.4 L1200,37.5"/><path style="stroke:var(--green)" d="M0,31.8 L20,29.1 L40,26.1 L60,23.0 L80,19.8 L100,16.8 L120,14.1 L140,11.8 L160,9.9 L180,8.7 L200,8.1 L220,8.1 L240,8.8 L260,10.1 L280,12.0 L300,14.4 L320,17.1 L340,20.2 L360,23.3 L380,26.4 L400,29.4 L420,32.1 L440,34.4 L460,36.2 L480,37.4 L500,38.0 L520,37.9 L540,37.1 L560,35.8 L580,33.8 L600,31.4 L620,28.6 L640,25.6 L660,22.5 L680,19.3 L700,16.4 L720,13.7 L740,11.5 L760,9.7 L780,8.6 L800,8.0 L820,8.2 L840,9.0 L860,10.4 L880,12.3 L900,14.8 L920,17.6 L940,20.6 L960,23.8 L980,26.9 L1000,29.8 L1020,32.5 L1040,34.7 L1060,36.4 L1080,37.5 L1100,38.0 L1120,37.8 L1140,37.0 L1160,35.5 L1180,33.5 L1200,31.0"/><path style="stroke:var(--blue)" d="M0,14.2 L20,11.8 L40,10.0 L60,8.7 L80,8.1 L100,8.1 L120,8.8 L140,10.1 L160,11.9 L180,14.3 L200,17.0 L220,20.1 L240,23.2 L260,26.3 L280,29.3 L300,32.0 L320,34.3 L340,36.1 L360,37.4 L380,37.9 L400,37.9 L420,37.2 L440,35.8 L460,33.9 L480,31.5 L500,28.7 L520,25.7 L540,22.6 L560,19.4 L580,16.5 L600,13.8 L620,11.5 L640,9.8 L660,8.6 L680,8.0 L700,8.2 L720,8.9 L740,10.3 L760,12.3 L780,14.7 L800,17.5 L820,20.5 L840,23.7 L860,26.8 L880,29.7 L900,32.4 L920,34.6 L940,36.4 L960,37.5 L980,38.0 L1000,37.8 L1020,37.0 L1040,35.5 L1060,33.6 L1080,31.1 L1100,28.3 L1120,25.2 L1140,22.1 L1160,19.0 L1180,16.0 L1200,13.4"/><path style="stroke:var(--purple)" d="M0,8.7 L20,10.0 L40,11.9 L60,14.2 L80,17.0 L100,20.0 L120,23.1 L140,26.2 L160,29.2 L180,31.9 L200,34.3 L220,36.1 L240,37.3 L260,37.9 L280,37.9 L300,37.2 L320,35.9 L340,34.0 L360,31.6 L380,28.8 L400,25.8 L420,22.7 L440,19.5 L460,16.6 L480,13.9 L500,11.6 L520,9.8 L540,8.6 L560,8.0 L580,8.1 L600,8.9 L620,10.3 L640,12.2 L660,14.6 L680,17.4 L700,20.4 L720,23.6 L740,26.7 L760,29.7 L780,32.3 L800,34.6 L820,36.3 L840,37.5 L860,38.0 L880,37.8 L900,37.0 L920,35.6 L940,33.6 L960,31.2 L980,28.4 L1000,25.3 L1020,22.2 L1040,19.1 L1060,16.1 L1080,13.5 L1100,11.3 L1120,9.6 L1140,8.5 L1160,8.0 L1180,8.2 L1200,9.1"/></svg>
+  <div class="wrap">
+    <p class="motto">Different strengths, one shared effort.</p>
+    <div class="about-design">
+      <p class="label">About this design</p>
+      <p>The star behind my name is the <em>khātam</em>, an eight-pointed star made of two interlaced squares. Geometers have drawn it for centuries with nothing but a compass and a straightedge. Here each of its rings has its own colour, and the star only appears where they meet. The five threads under my name work the same way: they start apart and run into a single line.</p>
+      <p>The pattern behind the page is a clockwork. Every tile holds gears of different sizes. The small inner stars tick quickly. When they complete a turn, the larger stars move, and their lines let go of their neighbours for a moment before meeting them again. When those complete a turn, the large medallions move. Each part keeps its own shape and its own pace, and the pattern holds together because they keep time with one another.</p>
+      <p>No single moment shows the whole design. A glance catches a few stars ticking. A minute shows a wave of lines parting and rejoining. The design unfolds as the mechanism runs, and it rewards the visitor who stays.</p>
+      <p>Each piece of work has a door beside it. Approach one and it lets out light, and the light shows what lies behind the title.</p>
+      <p>Together it is a parable for the question I work on. The parts differ in size, speed and form, the way agents and people differ in strength and constraint. Each has its own limits, and some of their moves pull against one another. The pattern stays whole when they coordinate and when no part is sacrificed to keep it turning. How agents with different capabilities can cooperate in a way that is fair to each, and that lasts, is the problem behind this site.</p>
+    </div>
+    <p>Muhammad Ahmed Atif · Karachi</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- the name: Kufic block sized to its widest word, star centred on it; replay ---------- */
+(() => {
+  const hero = document.getElementById('hero'), name = hero.querySelector('.name');
+  const arBox = name.querySelector('.ar'), words = [...name.querySelectorAll('.ar .w')], ros = name.querySelector('.rosette');
+  function layout() {
+    const W = Math.max(...words.map(w => w.offsetWidth));
+    arBox.style.width = W + 'px';
+    const D = Math.max(W, arBox.offsetHeight) * 1.2;       // star frames the block with equal margin
+    ros.style.width = ros.style.height = D + 'px';
+    ros.style.left = (W - D) / 2 + 'px';
+  }
+  addEventListener('resize', layout);
+  document.fonts.ready.then(layout);
+  const replay = () => { hero.classList.remove('play'); void hero.offsetWidth; hero.classList.add('play'); };
+  name.addEventListener('click', replay);
+  hero.querySelector('.replay').addEventListener('click', replay);
+})();
+
+/* ---------- background clockwork: one gear train from the smallest part to the largest, drawn as Islamic geometry.
+   Level 1: every small inner star ticks 45 degrees each beat, all in step; neighbours turn opposite ways (meshing gears).
+   Level 2: when the inner stars complete a full turn, each tile's diamond star turns 45 degrees and carries its rays,
+            which slide off their neighbours and meet them again on landing. It ripples out from the centre of each 3x3 block.
+   Level 3: when the diamond stars complete a full turn, the large medallion over each 3x3 block turns 45 degrees,
+            neighbouring medallions in opposite directions. The pattern scrolls with the page. ---------- */
+(() => {
+  const cv = document.querySelector('.clock'), cx = cv.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const T = 96, C = 48, R_OUT = 26, R_RING = 19, R_IN = 13, STEP = Math.PI / 4;
+  const BEAT = 0.75;                                   // seconds per tick of the smallest gear
+  const star = R => { const ri = R * Math.cos(Math.PI / 4) / Math.cos(Math.PI / 8);
+    return [...Array(16)].map((_, k) => { const r = k % 2 ? ri : R, a = -Math.PI / 2 + k * Math.PI / 8; return [r * Math.cos(a), r * Math.sin(a)]; }); };
+  const oct = R => [...Array(8)].map((_, k) => { const a = Math.PI / 8 + k * Math.PI / 4; return [R * Math.cos(a), R * Math.sin(a)]; });
+  const SO = star(R_OUT), SI = star(R_IN), OR = oct(R_RING);
+  const BIG = star(T * 1.3), BIG_IN = star(T * 0.62), BIG_RING = oct(T * 1.48);   // the medallion over a 3x3 block
+  const back = x => { const c1 = 1.2, c3 = c1 + 1; return 1 + c3 * (x - 1) ** 3 + c1 * (x - 1) ** 2; };   // small mechanical overshoot
+  const smooth = x => x * x * (3 - 2 * x);
+  function ticks(t, period, offset, dur, ease) {       // angle of a gear that ticks once per period, starting at offset
+    const u = t - offset; if (u < 0) return 0;
+    const n = Math.floor(u / period), f = Math.min(1, (u - n * period) / dur);
+    return (n + ease(f)) * STEP;
+  }
+  let W = 0, H = 0;
+  function size() { const dpr = 1; W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+  function poly(pts, x, y, a) {
+    const c = Math.cos(a), s = Math.sin(a);
+    pts.forEach(([px, py], k) => { const X = x + px * c - py * s, Y = y + px * s + py * c; k ? cx.lineTo(X, Y) : cx.moveTo(X, Y); });
+    cx.closePath();
+  }
+  function rays(x, y, a) {                // 8 rays from the diamond star's tips to the tile's edge, turning with the star
+    for (let k = 0; k < 8; k++) {
+      const d = -Math.PI / 2 + k * STEP + a, c = Math.cos(d), s = Math.sin(d), L = C / Math.max(Math.abs(c), Math.abs(s));
+      cx.moveTo(x + R_OUT * c, y + R_OUT * s); cx.lineTo(x + L * c, y + L * s);
+    }
+  }
+  const D1 = 0.5, D2 = 1.4, D3 = 3.0;                  // how long each level's tick takes
+  const P1 = BEAT, P2 = 8 * BEAT, P3 = 64 * BEAT;      // each level ticks once per full turn of the level below
+  function draw(t) {
+    if (innerWidth !== W || innerHeight !== H) size();
+    cx.clearRect(0, 0, W, H);
+    const sy = scrollY, j0 = Math.floor(sy / T) - 2, j1 = Math.ceil((sy + H) / T) + 1, i1 = Math.ceil(W / T) + 1;
+    const a1 = ticks(t, P1, 0, D1, back);
+    const tiles = [], meds = [];
+    for (let j = j0; j <= j1; j++) for (let i = -2; i <= i1; i++) {
+      const bi = Math.floor(i / 3), bj = Math.floor(j / 3), ring = Math.max(Math.abs(i - (bi * 3 + 1)), Math.abs(j - (bj * 3 + 1)));
+      const dir = ((i + j) % 2 + 2) % 2 ? -1 : 1;
+      tiles.push({ x: C + i * T, y: C + j * T - sy, a1: dir * a1,
+                   a2: -dir * ticks(t, P2, P2 - P1 + D1 + ring * 0.25, D2, smooth) });     // ripple from the block's centre
+      if (i === bi * 3 + 1 && j === bj * 3 + 1) {
+        const bdir = ((bi + bj) % 2 + 2) % 2 ? -1 : 1;
+        meds.push({ x: C + i * T, y: C + j * T - sy, a3: bdir * ticks(t, P3, P3 - P2 + D2 + 0.5, D3, smooth) });
+      }
+    }
+    const layer = (list, alpha, fn) => { cx.beginPath(); list.forEach(fn);
+      cx.strokeStyle = `rgba(201,166,70,${alpha})`; cx.lineWidth = 1; cx.stroke(); };
+    layer(meds, .10, m => poly(BIG_RING, m.x, m.y, -m.a3));
+    layer(meds, .15, m => poly(BIG, m.x, m.y, m.a3));
+    layer(meds, .11, m => poly(BIG_IN, m.x, m.y, -m.a3));
+    layer(tiles, .13, tl => rays(tl.x, tl.y, tl.a2));
+    layer(tiles, .17, tl => poly(SO, tl.x, tl.y, tl.a2));
+    layer(tiles, .13, tl => poly(OR, tl.x, tl.y, -tl.a2));
+    layer(tiles, .24, tl => poly(SI, tl.x, tl.y, tl.a1));
+  }
+  size(); addEventListener('resize', () => { size(); if (still) draw(0); });
+  if (still) { draw(0); addEventListener('scroll', () => draw(0), { passive: true }); return; }
+  // redraw only when a gear is turning or the page has scrolled, at most 30 times a second
+  const moving = t => {
+    const m = (u, period, span) => u >= 0 && ((u % period) + period) % period < span;
+    return m(t, P1, D1 + .05) || m(t - (P2 - P1 + D1), P2, D2 + .35) || m(t - (P3 - P2 + D2 + .5), P3, D3 + .05);
+  };
+  const t0 = performance.now(); let last = -1e9, lastY = -1, lastW = 0, lastH = 0;
+  (function frame(now) {
+    requestAnimationFrame(frame);
+    if (now - last < 33) return;
+    const t = (now - t0) / 1000;
+    if (!moving(t) && scrollY === lastY && innerWidth === lastW && innerHeight === lastH) return;
+    last = now; lastY = scrollY; lastW = innerWidth; lastH = innerHeight; draw(t);
+  })(t0);
+})();
+
+/* ---------- header background: agents of different speeds travel the star lattice
+   toward a shared meeting point; when they meet, a ring opens ---------- */
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const hero = document.querySelector('.hero'), cv = hero.querySelector('.lattice'), cx = cv.getContext('2d');
+  const S = 96, COLS = ['#ff5ea1', '#f5c84b', '#1de591', '#66d1ff', '#ae62e8'];
+  const DIRS = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];  // along the star's rays
+  let W = 0, H = 0, nx = 0, ny = 0, agents = [], rings = [], goal = [0, 0], running = true;
+  const pos = (i, j) => [48 + i * S, 48 + j * S];
+  const rnd = n => Math.floor(Math.random() * n);
+
+  function size() {
+    const dpr = 1;
+    W = hero.clientWidth; H = hero.clientHeight;
+    cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    nx = Math.max(2, Math.floor(W / S)); ny = Math.max(2, Math.floor(H / S));
+    if (!agents.length) {
+      goal = [rnd(nx), rnd(ny)];
+      for (let k = 0; k < 16; k++) {
+        const n = [rnd(nx), rnd(ny)];
+        agents.push({ from: n, to: n, t: 1, speed: 0.5 + Math.random() * 1.1, color: COLS[k % 5], trail: [] });
+      }
+    }
+  }
+  function next(a) {
+    const [i, j] = a.to, opts = DIRS.map(([di, dj]) => [i + di, j + dj])
+      .filter(([x, y]) => x >= 0 && y >= 0 && x < nx && y < ny);
+    const d = ([x, y]) => Math.hypot(x - goal[0], y - goal[1]);
+    opts.sort((p, q) => d(p) - d(q));
+    const pick = Math.random() < 0.55 ? opts[0] : opts[rnd(opts.length)];
+    a.from = a.to; a.to = pick; a.t = 0;
+  }
+  function frame() {
+    if (!running) return;
+    cx.clearRect(0, 0, W, H);
+    const live = agents.map(a => {
+      if (a.t >= 1) {
+        const [x, y] = pos(...a.to);
+        if (agents.some(b => b !== a && b.t >= 0.85 && b.to[0] === a.to[0] && b.to[1] === a.to[1]))
+          rings.push({ x, y, r: 3, al: 0.55, c: a.color });
+        next(a);
+      }
+      const [x0, y0] = pos(...a.from), [x1, y1] = pos(...a.to);
+      a.t = Math.min(1, a.t + a.speed / (Math.hypot(x1 - x0, y1 - y0) || 1));
+      const x = x0 + (x1 - x0) * a.t, y = y0 + (y1 - y0) * a.t;
+      a.trail.push([x, y]); if (a.trail.length > 26) a.trail.shift();
+      return [x, y, a];
+    });
+    // faint links between agents working near each other
+    cx.lineWidth = 1;
+    for (let m = 0; m < live.length; m++) for (let n = m + 1; n < live.length; n++) {
+      const dd = Math.hypot(live[m][0] - live[n][0], live[m][1] - live[n][1]);
+      if (dd < 90) { cx.strokeStyle = `rgba(255,255,255,${0.12 * (1 - dd / 90)})`;
+        cx.beginPath(); cx.moveTo(live[m][0], live[m][1]); cx.lineTo(live[n][0], live[n][1]); cx.stroke(); }
+    }
+    // trails and agents, each in its own colour
+    live.forEach(([x, y, a]) => {
+      cx.strokeStyle = a.color; cx.lineWidth = 1.4;
+      for (let k = 1; k < a.trail.length; k++) {
+        cx.globalAlpha = k / a.trail.length * 0.5; cx.beginPath();
+        cx.moveTo(...a.trail[k - 1]); cx.lineTo(...a.trail[k]); cx.stroke();
+      }
+      cx.globalAlpha = 0.9; cx.fillStyle = a.color; cx.beginPath(); cx.arc(x, y, 2.3, 0, 7); cx.fill();
+    });
+    cx.globalAlpha = 1;
+    // rings where agents meet
+    rings = rings.filter(r => r.al > 0.02);
+    rings.forEach(r => { cx.strokeStyle = r.c; cx.globalAlpha = r.al; cx.beginPath(); cx.arc(r.x, r.y, r.r, 0, 7); cx.stroke();
+                         r.r += 0.7; r.al *= 0.965; });
+    cx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+  size(); addEventListener('resize', size);
+  setInterval(() => { goal = [rnd(nx), rnd(ny)]; }, 9000);   // the shared aim moves; the group re-forms around it
+  new IntersectionObserver(([e]) => { const was = running; running = e.isIntersecting; if (running && !was) frame(); })
+    .observe(hero);
+  frame();
+})();
+
+/* ---------- the baab: hovering the door shines light across its entry, lifts golden dust,
+   makes the headline glow and reveals the details (the abstract for papers). No click needed. ---------- */
+(() => {
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // a plain arch, as in the reference: a rectangle with a round-topped opening
+  const door = '<span class="beam" aria-hidden="true"></span>' +
+    '<span class="baab" tabindex="0" role="img" aria-label="Door: hover or focus to show the details of this entry">' +
+    '<svg viewBox="0 0 64 88" aria-hidden="true">' +
+    '<path class="light" d="M4 88 V40 A28 28 0 0 1 60 40 V88 Z"/>' +
+    '<path class="frame" d="M0 0 H64 V88 H60 V40 A28 28 0 0 0 4 40 V88 H0 Z"/></svg></span>';
+
+  function dust(item, beam) {            // golden motes rising out of the doorway's hollow and drifting along the beam
+    if (still || item._dust) return;
+    const baab = item.querySelector('.baab'), cv = document.createElement('canvas'), cx = cv.getContext('2d');
+    cv.className = 'dust'; item.appendChild(cv);
+    const ir = item.getBoundingClientRect(), br = beam.getBoundingClientRect(), dr = baab.getBoundingClientRect();
+    const left = br.left - ir.left, W = Math.min(innerWidth, dr.right) - br.left, H = ir.height, dpr = 1;
+    Object.assign(cv.style, { left: left + 'px', width: W + 'px', height: H + 'px' });
+    cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const ox = dr.left - br.left, ow = Math.min(dr.width, innerWidth - dr.left), D = dr.height;   // the door, in canvas space
+    const mid = D * .62, ps = []; item._dust = true;
+    (function tick() {
+      const on = item.classList.contains('lit');
+      if (on) for (let k = 0; k < 4; k++) {
+        const x = ox + ow * (0.18 + Math.random() * 0.4);              // inside the hollow, not on the frame
+        const y = D * (0.4 + Math.random() * 0.56), vx = -(0.5 + Math.random() * 1.5);
+        ps.push({ x, y, x0: x, vx, vy: (y - mid) / D * Math.abs(vx) * 0.9 + (Math.random() - .5) * .2,
+                  life: 1, fade: 0.002 + Math.random() * 0.004, size: 0.35 + Math.random() * 0.55, ph: Math.random() * 6 });
+      }
+      cx.clearRect(0, 0, W, H); cx.globalCompositeOperation = 'lighter';
+      for (let k = ps.length - 1; k >= 0; k--) {
+        const p = ps[k]; p.x += p.vx; p.y += p.vy + Math.sin((p.x + p.ph * 40) / 30) * 0.15; p.life -= p.fade;
+        if (p.life <= 0 || p.x < 0 || p.y < 0 || p.y > H) { ps.splice(k, 1); continue; }
+        const away = Math.min(1, (p.x0 - p.x) / 160);                   // transparent at the door, clearer further out
+        const a = away * away * Math.min(1, p.life * 1.4);
+        cx.fillStyle = `rgba(255,222,150,${a})`;
+        cx.beginPath(); cx.arc(p.x, p.y, p.size, 0, 7); cx.fill();
+      }
+      if (on || ps.length) requestAnimationFrame(tick); else { cv.remove(); item._dust = false; }
+    })();
+  }
+
+  document.querySelectorAll('.paper .item').forEach(item => {
+    const col = item.children[1]; if (!col) return;
+    const kids = [...col.children];
+    const sum = kids.filter(k => k.matches('.title, .authors'));
+    let desc = kids.find(k => k.matches('.desc'));
+    let rest = kids.filter(k => !sum.includes(k) && k !== desc);
+    if (!sum.length || (!desc && !rest.length)) return;
+    if (!desc) {                              // no abstract: the first paragraph of the details is the description
+      const first = rest.find(k => k.matches('.note'));
+      if (first) { desc = document.createElement('div'); desc.className = 'desc'; desc.appendChild(first); rest = rest.filter(k => k !== first); }
+    }
+    if (desc) col.appendChild(desc);
+    if (rest.length) { const det = document.createElement('div'); det.className = 'det'; rest.forEach(k => det.appendChild(k)); col.appendChild(det); }
+    item.classList.add('has-door'); item.insertAdjacentHTML('beforeend', door);
+    const baab = item.querySelector('.baab'), beam = item.querySelector('.beam');
+    const lit = on => { item.classList.toggle('lit', on); if (on) dust(item, beam); };
+    // light comes on at the door and stays while the pointer is on the door or the entry (so links can be clicked)
+    baab.addEventListener('mouseenter', () => lit(true));
+    item.addEventListener('mouseleave', () => lit(false));
+    item.addEventListener('focusin', () => lit(true));
+    item.addEventListener('focusout', e => { if (!item.contains(e.relatedTarget)) lit(false); });
+    baab.addEventListener('pointerup', e => { if (e.pointerType === 'touch') lit(!item.classList.contains('lit')); });
+  });
+
+  function rows() {
+    const items = [...document.querySelectorAll('.paper .item.has-door')], root = document.documentElement.style;
+    items.forEach(i => i.style.minHeight = '');
+    if (innerWidth <= 760 || !items.length) { root.removeProperty('--rowh'); root.removeProperty('--doorw'); return; }
+    const lit = items.filter(i => i.classList.contains('lit')); lit.forEach(i => i.classList.remove('lit'));
+    const H = Math.ceil(Math.max(...items.map(i => i.offsetHeight)));
+    lit.forEach(i => i.classList.add('lit'));
+    root.setProperty('--rowh', H + 'px'); root.setProperty('--doorw', Math.round(H * 64 / 88) + 'px');
+    items.forEach(i => i.style.minHeight = H + 'px');
+  }
+  rows(); document.fonts.ready.then(rows); addEventListener('resize', rows);
+})();
+
+/* ---------- vision questions take turns; sections fade up on scroll ---------- */
+(() => {
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const asks = [...document.querySelectorAll('.asks li')];
+  if (!still) {
+    let i = 0;
+    setTimeout(() => setInterval(() => {
+      asks.forEach((li, k) => li.classList.toggle('on', k === i));
+      i = (i + 1) % asks.length;
+    }, 2600), 5600);
+  }
+  const els = document.querySelectorAll('.paper h2, .quote, .stage, .steps > div, .two, .item');
+  if (still || !('IntersectionObserver' in window)) return;
+  els.forEach((el, k) => { el.classList.add('reveal'); el.style.transitionDelay = (k % 3) * 80 + 'ms'; });
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: 0.12 });
+  els.forEach(el => io.observe(el));
+})();
+
+/* ---------- vision illustration (scripted, not a learned policy) ---------- */
+(() => {
+  const canvas = document.getElementById('sim'), ctx = canvas.getContext('2d');
+  const caption = document.getElementById('caption');
+  const buttons = [...document.querySelectorAll('.modes button')];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const C = { pink: css('--pink'), yellow: css('--yellow'), blue: css('--blue'), purple: css('--purple'),
+              green: css('--green'), muted: '#6b6b70', text: '#f2f2f2' };
+  const TEXT = {
+    total: 'Maximising the total: the fast agents do the work and the total rises, while the slowest agent is pushed aside.',
+    fair:  'A fair share for each: every agent holds a position around the target, so each one stays useful and the team stays together.'
+  };
+
+  let W = 0, H = 0, mode = 'total', userPicked = false, t = 0;
+  const agents = [
+    { name: 'fast',   speed: 2.4, r: 11, color: C.pink },
+    { name: 'quick',  speed: 1.9, r: 10, color: C.yellow },
+    { name: 'steady', speed: 1.4, r: 9,  color: C.blue },
+    { name: 'slow',   speed: 0.7, r: 8,  color: C.purple },
+  ].map((a, i) => ({ ...a, x: 60 + i * 50, y: 60 + i * 40, alpha: 1, share: 0.25 }));
+  const prey = { x: 0, y: 0 };
+
+  function resize() {
+    const dpr = window.devicePixelRatio || 1, r = canvas.getBoundingClientRect();
+    W = r.width; H = r.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function setMode(m, byUser) {
+    mode = m; if (byUser) userPicked = true;
+    buttons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
+    caption.textContent = TEXT[m];
+  }
+  buttons.forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode, true)));
+
+  function moveTo(a, tx, ty) {
+    const dx = tx - a.x, dy = ty - a.y, d = Math.hypot(dx, dy);
+    if (d > 0.5) { const s = Math.min(a.speed, d); a.x += dx / d * s; a.y += dy / d * s; }
+  }
+  const lerp = (a, b, k) => a + (b - a) * k;
+
+  function step() {
+    t += 1 / 60;
+    const plotH = H - 70;                     // leave room for the share bars
+    prey.x = W * 0.55 + Math.sin(t * 0.7) * W * 0.22 + Math.sin(t * 1.9) * 18;
+    prey.y = plotH * 0.5 + Math.cos(t * 0.9) * plotH * 0.28;
+
+    agents.forEach((a, i) => {
+      let target, alpha = 1, share;
+      if (mode === 'total') {
+        if (a.name === 'slow') { target = [30, plotH - 24]; alpha = 0.35; share = 0.04; }
+        else { const ang = t * 1.6 + i * 2.1; target = [prey.x + Math.cos(ang) * 22, prey.y + Math.sin(ang) * 22];
+               share = [0.42, 0.32, 0.22][i]; }
+      } else {
+        const ang = i * Math.PI / 2 + t * 0.35, rad = 48;
+        target = [prey.x + Math.cos(ang) * rad, prey.y + Math.sin(ang) * rad];
+        if (a.name === 'slow') a.speed = 1.6;  // a role near the target lets it keep up
+        share = 0.25;
+      }
+      if (mode === 'total' && a.name === 'slow') a.speed = 0.7;
+      moveTo(a, target[0], target[1]);
+      a.alpha = lerp(a.alpha, alpha, 0.05);
+      a.share = lerp(a.share, share, 0.03);
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    const plotH = H - 70;
+
+    // faint grid, a nod to the gridworld
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += 28) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, plotH); ctx.stroke(); }
+    for (let y = 0; y < plotH; y += 28) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+    // cooperation links in the fair mode
+    if (mode === 'fair') {
+      ctx.strokeStyle = 'rgba(29,229,145,0.45)'; ctx.lineWidth = 1.5; ctx.beginPath();
+      agents.forEach((a, i) => { const b = agents[(i + 1) % agents.length]; ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); });
+      ctx.stroke();
+    }
+
+    // target
+    ctx.fillStyle = C.green; ctx.beginPath(); ctx.arc(prey.x, prey.y, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(29,229,145,0.3)'; ctx.beginPath();
+    ctx.arc(prey.x, prey.y, 12 + Math.sin(t * 4) * 3, 0, Math.PI * 2); ctx.stroke();
+
+    // agents
+    agents.forEach(a => {
+      ctx.globalAlpha = a.alpha; ctx.fillStyle = a.color;
+      ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+
+    // share bars: how much each agent contributes
+    const bw = Math.min(140, (W - 60) / 4), y0 = H - 36;
+    ctx.font = '500 11px "Work Sans", sans-serif'; ctx.textBaseline = 'alphabetic';
+    agents.forEach((a, i) => {
+      const x = 18 + i * (bw + 10);
+      ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(x, y0, bw, 6);
+      ctx.fillStyle = a.color; ctx.globalAlpha = Math.max(a.alpha, 0.5);
+      ctx.fillRect(x, y0, bw * Math.min(1, a.share / 0.45), 6); ctx.globalAlpha = 1;
+      ctx.fillStyle = C.muted; ctx.fillText(a.name + ' agent', x, y0 + 22);
+    });
+    ctx.fillStyle = C.muted; ctx.fillText('share of the work', 18, y0 - 10);
+  }
+
+  let onScreen = true;
+  new IntersectionObserver(([e]) => { const was = onScreen; onScreen = e.isIntersecting; if (onScreen && !was) loop(); }).observe(canvas);
+  function loop() { if (!onScreen) return; step(); draw(); requestAnimationFrame(loop); }
+
+  resize(); addEventListener('resize', () => { resize(); if (reduce) draw(); });
+  setMode('total');
+  if (reduce) {                       // still image for people who turn motion off
+    for (let i = 0; i < 400; i++) step();
+    draw();
+    buttons.forEach(b => b.addEventListener('click', () => { for (let i = 0; i < 400; i++) step(); draw(); }));
+  } else {
+    setInterval(() => { if (!userPicked) setMode(mode === 'total' ? 'fair' : 'total'); }, 7000);
+    loop();
+  }
+})();
+</script>
+</body>
+</html>
