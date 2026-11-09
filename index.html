@@ -51,6 +51,21 @@
   .play .stripe path:nth-of-type(1) { animation-delay: 4.5s; } .play .stripe path:nth-of-type(2) { animation-delay: 4.6s; }
   .play .stripe path:nth-of-type(3) { animation-delay: 4.7s; } .play .stripe path:nth-of-type(4) { animation-delay: 4.8s; }
   .play .stripe path:nth-of-type(5) { animation-delay: 4.9s; } .play .stripe path:nth-of-type(6) { animation-delay: 5.6s; }
+  /* the shared strand runs on to the vision, flashes, and branches out to the three questions */
+  .branch { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .branch path { fill: none; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .branch .trunk { stroke: #f2f2f2; stroke-width: 2.2; }
+  .branch .b { stroke: rgba(242,242,242,.4); stroke-width: 1.4; transition: stroke .6s, filter .6s; }
+  .branch .b.on { stroke: #f2f2f2; filter: drop-shadow(0 0 3px rgba(255,255,255,.85)); }
+  .branch .knot { fill: #f2f2f2; transform-box: fill-box; transform-origin: center; }
+  .play .branch .trunk { stroke-dashoffset: 1; animation: draw .8s ease-in 6.9s forwards; }
+  .play .branch .b { stroke-dashoffset: 1; animation: draw .6s ease-out forwards; }
+  .play .branch .b:nth-of-type(2) { animation-delay: 7.75s; } .play .branch .b:nth-of-type(3) { animation-delay: 7.9s; }
+  .play .branch .b:nth-of-type(4) { animation-delay: 8.05s; }
+  .play .branch .knot { animation: knot 1s ease-out 7.6s both; }
+  @keyframes knot { 0% { opacity: 0; transform: scale(.2); } 35% { opacity: 1; transform: scale(2.4); filter: drop-shadow(0 0 8px #fff); } 100% { opacity: 1; transform: scale(1); } }
+  .play .asks li.after:nth-child(1) { animation-delay: 8.2s; } .play .asks li.after:nth-child(2) { animation-delay: 8.35s; }
+  .play .asks li.after:nth-child(3) { animation-delay: 8.5s; } .play .details .closing.after { animation-delay: 8.9s; }
 
   /* eight-pointed star rosette (khatam): each ring a different colour, one pattern */
   .rosette { position: absolute; left: 0.2em; top: 50%; width: 3.3em; height: 3.3em; transform: translateY(-50%);
@@ -244,6 +259,7 @@
   @media (max-width: 760px) {
     .hero-grid { grid-template-columns: minmax(0,1fr); min-height: auto; gap: 36px; padding: 48px 16px; }
     .details { border-left: 0; padding-left: 0; }
+    .branch { display: none; }
     .row { padding-left: 0; } .row:first-child { padding-top: 16px; }
     .two, .item, .steps { grid-template-columns: minmax(0,1fr); gap: 10px; }
     .steps { gap: 20px; }
@@ -252,7 +268,7 @@
   @media (prefers-reduced-motion: reduce) {
     .play .after, .play .ar .w, .play .ar, .play .en { animation: none !important; }
     .ar { opacity: 0; }
-    .play .rosette, .play .rosette path, .play .stripe path { animation: none !important; stroke-dashoffset: 0; }
+    .play .rosette, .play .rosette path, .play .stripe path, .play .branch path, .play .branch .knot { animation: none !important; stroke-dashoffset: 0 !important; }
     .asks li { color: var(--on-dark); }
   }
 </style>
@@ -264,6 +280,7 @@
 <header class="hero">
   <canvas class="lattice" aria-hidden="true"></canvas>
   <div class="wrap hero-grid play" id="hero">
+    <svg class="branch" aria-hidden="true"><path class="trunk" pathLength="1"/><path class="b" pathLength="1"/><path class="b" pathLength="1"/><path class="b" pathLength="1"/><circle class="knot" r="3"/></svg>
     <div>
       <p class="label after d1">Researcher</p>
       <h1 class="name" title="Click to replay" aria-label="Muhammad Ahmed Atif">
@@ -547,6 +564,22 @@
   const replay = () => { hero.classList.remove('play'); void hero.offsetWidth; hero.classList.add('play'); };
   name.addEventListener('click', replay);
   hero.querySelector('.replay').addEventListener('click', replay);
+
+  // route the strand from the end of the stripe to a fork before the divider, then one branch to each question's "?"
+  const svg = hero.querySelector('.branch'), stripe = hero.querySelector('.stripe'), det = hero.querySelector('.details');
+  const trunk = svg.querySelector('.trunk'), bs = [...svg.querySelectorAll('.b')], knot = svg.querySelector('.knot');
+  const lis = [...det.querySelectorAll('.asks li')];
+  function branch() {
+    const o = hero.getBoundingClientRect(), s = stripe.getBoundingClientRect(), d = det.getBoundingClientRect();
+    const sx = s.right - o.left, sy = s.top + s.height / 2 - o.top, fx = d.left - o.left - 34;
+    trunk.setAttribute('d', `M${sx} ${sy} H${fx}`);
+    knot.setAttribute('cx', fx); knot.setAttribute('cy', sy);
+    lis.forEach((li, k) => {   // offsets ignore the rise animation's transform
+      const cs = getComputedStyle(li), y = li.offsetTop + parseFloat(cs.paddingTop) + parseFloat(cs.lineHeight) / 2, ex = li.offsetLeft - 8;
+      bs[k].setAttribute('d', `M${fx} ${sy} C${fx + 30} ${sy} ${ex - 34} ${y} ${ex} ${y}`);
+    });
+  }
+  branch(); document.fonts.ready.then(branch); addEventListener('resize', branch);
 })();
 
 /* ---------- background clockwork: one gear train from the smallest part to the largest, drawn as Islamic geometry.
@@ -797,8 +830,9 @@
     let i = 0;
     setTimeout(() => setInterval(() => {
       asks.forEach((li, k) => li.classList.toggle('on', k === i));
+      document.querySelectorAll('.branch .b').forEach((b, k) => b.classList.toggle('on', k === i));
       i = (i + 1) % asks.length;
-    }, 2600), 5600);
+    }, 2600), 6600);   // first highlight at 9.2s, once the branches have reached the questions
   }
 })();
 
